@@ -6,7 +6,7 @@ import styles from './SearchBarStyles';
 import { withRouter } from 'react-router-dom';
 import qs from 'query-string';
 import SearchBar from './SearchBar';
-import { getAlbums } from '../../../../data/actionCreators/albums';
+import { fetchAlbums } from '../../../../data/actionCreators/albums';
 
 const validationSchema = Yup.object().shape({
   request: Yup.string().required('Required')
@@ -37,7 +37,7 @@ export default withRouter(
   withFormik(configFormik)(
     connect(
       ({ user: { isWaiting } }) => ({ isWaiting }),
-      { getAlbums }
+      { fetchAlbums }
     )(SearchBar)
   )
 );

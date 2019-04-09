@@ -1,39 +1,48 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import MyAlbums from './MyAlbums';
-import { loadData } from '../../../../data/actionCreators/user';
+import { fetchUserAlbumsInfo } from '../../../../data/actionCreators/user';
 
 class MyAlbumsContainer extends React.Component {
   state = {
-    albums: Object.keys(this.props.albums).map(id => ({
-      id,
-      artist: this.props.albums[id]?.artist || [],
-      title: this.props.albums[id]?.title || null,
-      image:
-        this.props.albums[id]?.image ||
-        'https://upload.wikimedia.org/wikipedia/commons/b/b9/No_Cover.jpg'
-    }))
+    albums: Object.keys(this.props.albumsData).map(id => {
+      const { artists = [], title = '', images = [] } = this.props.albumsData[id];
+      return {
+        id,
+        artists,
+        title,
+        image:
+          images[0]?.thumbnails?.large ||
+          images[0]?.thumbnails?.small ||
+          images[0]?.image ||
+          'https://upload.wikimedia.org/wikipedia/commons/b/b9/No_Cover.jpg'
+      };
+    })
   };
   componentDidMount() {
-    const { loadData, albums, albumsLocal } = this.props;
-    if (albumsLocal.length > 0 && albumsLocal.length !== Object.keys(albums).length) loadData();
+    const { fetchUserAlbumsInfo, albumsData, albums } = this.props;
+    if (albums.length > 0 && albums.length !== Object.keys(albumsData).length)
+      fetchUserAlbumsInfo();
   }
 
   componentDidUpdate(prevProps, prevState) {
-    const prevIds = Object.keys(prevProps.albums);
-    const ids = Object.keys(this.props.albums);
+    const prevIds = Object.keys(prevProps.albumsData);
+    const ids = Object.keys(this.props.albumsData);
     if (prevIds.length !== ids.length) {
       this.setState((state, props) => {
         let albums = [...state.albums];
         if (ids.length > prevIds.length) {
           ids.forEach(id => {
-            if (!prevProps.albums[id]) {
+            if (!prevProps.albumsData[id]) {
+              const { artists = [], title = '', images = [] } = props.albumsData[id];
               const album = {
                 id,
-                artist: props.albums[id]?.artist || [],
-                title: props.albums[id]?.title || null,
+                artists,
+                title,
                 image:
-                  props.albums[id]?.image ||
+                  images[0]?.thumbnails?.large ||
+                  images[0]?.thumbnails?.small ||
+                  images[0]?.image ||
                   'https://upload.wikimedia.org/wikipedia/commons/b/b9/No_Cover.jpg'
               };
               albums.push(album);
@@ -41,7 +50,7 @@ class MyAlbumsContainer extends React.Component {
           });
         } else {
           prevIds.forEach(id => {
-            if (!this.props.albums[id]) {
+            if (!this.props.albumsData[id]) {
               const ind = albums.findIndex(album => album.id === id);
               if (ind !== -1) {
                 albums = [...albums.slice(0, ind), ...albums.slice(ind + 1)];
@@ -62,10 +71,10 @@ class MyAlbumsContainer extends React.Component {
 }
 
 export default connect(
-  ({ user: { albums, albumsLocal, isWaiting } }) => ({
+  ({ user: { albumsData, albums, isWaiting } }) => ({
+    albumsData,
     albums,
-    albumsLocal,
     isWaiting
   }),
-  { loadData }
+  { fetchUserAlbumsInfo }
 )(MyAlbumsContainer);

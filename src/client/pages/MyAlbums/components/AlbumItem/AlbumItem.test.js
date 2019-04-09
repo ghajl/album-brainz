@@ -9,14 +9,14 @@ afterAll(cleanup);
 
 describe('list item', () => {
   const id = '1234';
-  const artist = [{ id: '1', name: 'First Name' }, { id: '2', name: 'Second Name' }];
+  const artists = [{ id: '1', name: 'First Name' }, { id: '2', name: 'Second Name' }];
   const title = 'Album Title';
   const image = 'image.jpg';
 
   const history = createMemoryHistory({ initialEntries: ['/'] });
   const { getAllByTestId, getByTestId, getByText } = render(
     <Router history={history}>
-      <AlbumItem id={id} title={title} artist={artist} image={image} />
+      <AlbumItem id={id} title={title} artists={artists} image={image} />
     </Router>
   );
 
@@ -30,13 +30,11 @@ describe('list item', () => {
     expect(getByTestId('title').textContent).toBe('Album Title');
   });
   it('renders artists names', () => {
-    const artists = getByTestId('artists');
-    const name = getByTestId('name');
     const names = getAllByTestId('name');
     const firstName = getByText(/First Name/i);
     const secondName = getByText(/Second Name/i);
 
-    expect(artists).toContainElement(name);
+    expect(getByTestId('artists')).toContainElement(getByTestId('name'));
     expect(names).toHaveLength(2);
     expect(names).toContain(firstName);
     expect(names).toContain(secondName);

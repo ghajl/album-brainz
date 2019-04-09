@@ -3,13 +3,13 @@ import PropTypes from 'prop-types';
 import withStyles from 'react-jss';
 import styles from './InfoStyles';
 
-const Info = ({ id, artist, title, date, classes }) => {
+const Info = ({ id, artists, title, date, classes }) => {
   return (
     <div data-testid="info" className={classes.detailsBody}>
       <h1 data-testid="title">{title}</h1>
       <div data-testid="artists">
         <h4 className="mt-4">{`Artist:`}</h4>
-        {artist.map(item => (
+        {artists.map(item => (
           <div key={item.id} data-testid="name">
             {item.name}
           </div>
@@ -28,14 +28,14 @@ export default withStyles(styles)(Info);
 Info.propTypes = {
   classes: PropTypes.shape({}),
   id: PropTypes.string.isRequired,
-  artist: PropTypes.arrayOf(PropTypes.shape({})),
+  artists: PropTypes.arrayOf(PropTypes.shape({})),
   date: PropTypes.string,
   title: PropTypes.string
 };
 
 Info.defaultProps = {
   classes: {},
-  artist: [],
+  artists: [],
   date: '',
   title: ''
 };

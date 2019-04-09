@@ -12,17 +12,9 @@ import styles from './SearchBarStyles';
 import { withRouter } from 'react-router-dom';
 import qs from 'query-string';
 
-const SearchBar = ({
-  classes,
-  values,
-  errors,
-  handleChange,
-  handleSubmit,
-  isWaiting,
-  ...props
-}) => {
+const SearchBar = ({ classes, values, errors, handleChange, handleSubmit, isWaiting }) => {
   return (
-    <Form className="m-4" onSubmit={handleSubmit} {...props}>
+    <Form className="m-4" onSubmit={handleSubmit}>
       <Form.Row className={classes.center}>
         <Form.Group controlId="formUsername">
           <Form.Control
@@ -37,7 +29,7 @@ const SearchBar = ({
           <Form.Control.Feedback type="invalid">Empty field</Form.Control.Feedback>
         </Form.Group>
         <div>
-          <Button type="submit" disabled={isWaiting}>
+          <Button data-testid="submit" type="submit" disabled={isWaiting} role="button">
             Submit
           </Button>
         </div>
@@ -49,9 +41,17 @@ const SearchBar = ({
 export default withStyles(styles)(SearchBar);
 
 SearchBar.propTypes = {
-  classes: PropTypes.shape({})
+  classes: PropTypes.shape({}),
+  values: PropTypes.shape({}),
+  errors: PropTypes.shape({}),
+  handleChange: PropTypes.func.isRequired,
+  handleSubmit: PropTypes.func.isRequired,
+  isWaiting: PropTypes.bool
 };
 
 SearchBar.defaultProps = {
-  classes: {}
+  classes: {},
+  values: { request: '' },
+  errors: {},
+  isWaiting: false
 };

@@ -1,60 +1,54 @@
 import { combineReducers } from 'redux';
 import * as actionTypes from '../types';
 
-const message = (state = '', action) => {
+export const message = (state = '', action) => {
   switch (action.type) {
-    case actionTypes.GET_ALBUMS_ERROR:
-    case actionTypes.GET_DETAILS_ERROR:
-    case actionTypes.ADD_TO_MY_LIST_ERROR:
-    case actionTypes.REMOVE_FROM_MY_LIST_ERROR:
+    case actionTypes.FETCH_ALBUMS_FAILURE:
+    case actionTypes.FETCH_ALBUM_INFO_FAILURE:
+    case actionTypes.ADD_TO_MY_LIST_FAILURE:
+    case actionTypes.REMOVE_FROM_MY_LIST_FAILURE:
       return action.message;
     case actionTypes.CLOSE_DIALOG:
-    case actionTypes.ADD_TO_MY_LIST:
-    case actionTypes.REMOVE_FROM_MY_LIST:
       return '';
     default:
       return state;
   }
 };
 
-const isWaiting = (state = false, action) => {
+export const isWaiting = (state = false, action) => {
   switch (action.type) {
-    case actionTypes.GET_DETAILS_BEGIN:
-    case actionTypes.GET_ALBUMS_BEGIN:
-    case actionTypes.BEGIN_LOAD_DATA:
+    case actionTypes.FETCH_ALBUM_INFO_BEGIN:
+    case actionTypes.FETCH_ALBUMS_BEGIN:
+    case actionTypes.FETCH_USER_ALBUMS_INFO_BEGIN:
       return true;
-    case actionTypes.GET_ALBUMS_ERROR:
-    case actionTypes.GET_ALBUMS_SUCCESS:
-    case actionTypes.GET_DETAILS_ERROR:
-    case actionTypes.LOAD_DATA_ERROR:
-    case actionTypes.GET_DETAILS_SUCCESS:
-    case actionTypes.LOAD_DATA_SUCCESS:
+    case actionTypes.FETCH_ALBUMS_FAILURE:
+    case actionTypes.FETCH_ALBUMS_SUCCESS:
+    case actionTypes.FETCH_ALBUM_INFO_FAILURE:
+    case actionTypes.FETCH_ALBUM_INFO_SUCCESS:
+    case actionTypes.FETCH_USER_ALBUMS_INFO_FAILURE:
+    case actionTypes.FETCH_USER_ALBUMS_INFO_SUCCESS:
       return false;
     default:
       return state;
   }
 };
 
-const albums = (state = {}, action) => {
+export const albumsData = (state = {}, action) => {
   switch (action.type) {
-    // case actionTypes.LOAD_DATA_SUCCESS:
-    //   return { ...action.data };
     case actionTypes.PUSH_LOADED_DATA:
       return { ...state, ...action.album };
     case actionTypes.ADD_TO_MY_LIST: {
-      const { id, artist, title, image } = action;
+      const { id, artists, title, images } = action;
       const albumData = {
-        artist,
+        artists,
         title,
-        image
+        images
       };
       return { ...state, ...{ [id]: albumData } };
     }
     case actionTypes.REMOVE_FROM_MY_LIST: {
       const { id } = action;
-      console.log(state);
       const { [id]: deletedKey, ...otherKeys } = state;
-      console.log(otherKeys);
       return otherKeys;
     }
     default:
@@ -62,11 +56,8 @@ const albums = (state = {}, action) => {
   }
 };
 
-const albumsLocal = (state = [], action) => {
+export const albums = (state = [], action) => {
   switch (action.type) {
-    // case actionTypes.LOAD_DATA_SUCCESS:
-    //   return { ...action.data };
-
     case actionTypes.ADD_TO_MY_LIST: {
       const { id } = action;
       return [...state, id];
@@ -86,9 +77,9 @@ const albumsLocal = (state = [], action) => {
 
 const userReducer = combineReducers({
   message,
-  albums,
+  albumsData,
   isWaiting,
-  albumsLocal
+  albums
 });
 
 export default userReducer;

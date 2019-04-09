@@ -10,21 +10,21 @@ const apiCall = id => {
     return data;
   });
 };
-const beginLoadData = () => {
+const fetchUserAlbumsInfoBegin = () => {
   return {
-    type: actionTypes.BEGIN_LOAD_DATA
+    type: actionTypes.FETCH_USER_ALBUMS_INFO_BEGIN
   };
 };
 
-const loadDataSuccess = data => {
+const fetchUserAlbumsInfoSuccess = data => {
   return {
-    type: actionTypes.LOAD_DATA_SUCCESS,
+    type: actionTypes.FETCH_USER_ALBUMS_INFO_SUCCESS,
     data
   };
 };
-const loadDataError = data => {
+const fetchUserAlbumsInfoFailure = data => {
   return {
-    type: actionTypes.LOAD_DATA_ERROR
+    type: actionTypes.FETCH_USER_ALBUMS_INFO_FAILURE
   };
 };
 const pushLoadedData = album => {
@@ -34,12 +34,12 @@ const pushLoadedData = album => {
   };
 };
 
-export const loadData = () => {
+export const fetchUserAlbumsInfo = () => {
   return async (dispatch, getState) => {
-    dispatch(beginLoadData());
+    dispatch(fetchUserAlbumsInfoBegin());
     try {
       const result = {};
-      const ids = getState().user.albumsLocal;
+      const ids = getState().user.albums;
       await Promise.map(
         ids,
         async id => {
@@ -49,28 +49,19 @@ export const loadData = () => {
           } catch (e) {
             console.log(e);
           }
-          console.log(album);
-          const { artist = [], title = null, image = null } = album;
+          const { artists = [], title = '', images = [] } = album;
           result[id] = {
-            artist: [...artist],
+            artists,
             title,
-            image
+            images
           };
           dispatch(pushLoadedData(result));
         },
         { concurrency: 5 }
       );
-      // data.forEach(({ id, artist, title, image }) => {
-      //   result[id] = {
-      //     artist: [...artist],
-      //     title,
-      //     image
-      //   };
-      // });
-      return dispatch(loadDataSuccess());
+      return dispatch(fetchUserAlbumsInfoSuccess());
     } catch (err) {
-      console.log(err);
-      dispatch(loadDataError('users'));
+      dispatch(fetchUserAlbumsInfoFailure('users'));
     }
   };
 };
@@ -81,45 +72,46 @@ export const closeDialog = () => {
   };
 };
 
-const addToMyListError = message => {
+const addToMyListFailure = message => {
   return {
-    type: actionTypes.ADD_TO_MY_LIST_ERROR,
+    type: actionTypes.ADD_TO_MY_LIST_FAILURE,
     message
   };
 };
 
-const removeFromMyListError = message => {
+const removeFromMyListFailure = message => {
   return {
-    type: actionTypes.REMOVE_FROM_MY_LIST_ERROR,
+    type: actionTypes.REMOVE_FROM_MY_LIST_FAILURE,
     message
   };
 };
 
-export const addToMyList = ({ id, image, artist, title }) => {
+export const addToMyList = ({ id, images, artists, title }) => {
   return (dispatch, getState) => {
     const myAlbums = getState().user.albums;
-    if (typeof myAlbums[id] === 'undefined') {
+    if (!~myAlbums.indexOf(id)) {
       const myList = ls('my-albums');
-      ls('my-albums', [...myList, id]);
+      if (!~myList.indexOf(id)) ls('my-albums', [...myList, id]);
       return dispatch({
         type: actionTypes.ADD_TO_MY_LIST,
         id,
-        image: image?.small || null,
-        artist,
+        images,
+        artists,
         title
       });
     }
-    dispatch(addToMyListError('Album already in list'));
+    dispatch(addToMyListFailure('Album already in the list'));
   };
 };
 
 export const removeFromMyList = id => {
   return (dispatch, getState) => {
     const myAlbums = getState().user.albums;
-    if (typeof myAlbums[id] !== 'undefined') {
+    console.log(myAlbums);
+    if (!!~myAlbums.indexOf(id)) {
       const myList = ls('my-albums');
       const ind = myList.indexOf(id);
-      if (ind !== -1) {
+      if (!!~myList.indexOf(id)) {
         ls('my-albums', [...myList.slice(0, ind), ...myList.slice(ind + 1)]);
       }
 
@@ -128,6 +120,6 @@ export const removeFromMyList = id => {
         id
       });
     }
-    dispatch(removeFromMyListError('Album already not in list'));
+    dispatch(removeFromMyListFailure('Album already not in the list'));
   };
 };

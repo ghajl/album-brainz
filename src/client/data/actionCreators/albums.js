@@ -1,70 +1,40 @@
 import axios from 'axios';
 import throttle from 'lodash.throttle';
 import * as actionTypes from '../types';
-import getCoverData from '../helpers/getCoverData';
+import getAlbums from '../helpers/getAlbums';
 
-const beginGetAlbums = () => {
-  return { type: actionTypes.GET_ALBUMS_BEGIN };
+const fetchAlbumsBegin = () => {
+  return { type: actionTypes.FETCH_ALBUMS_BEGIN };
 };
 
-const getAlbumsError = message => {
+const fetchAlbumsFailure = message => {
   return {
-    type: actionTypes.GET_ALBUMS_ERROR,
+    type: actionTypes.FETCH_ALBUMS_FAILURE,
     message
   };
 };
 
-const getAlbumsSuccess = albums => {
+const fetchAlbumsSuccess = albums => {
   return {
-    type: actionTypes.GET_ALBUMS_SUCCESS,
+    type: actionTypes.FETCH_ALBUMS_SUCCESS,
     albums
   };
 };
 
 export const clearAlbums = () => {
-  console.log('clearAlbums');
   return {
     type: actionTypes.CLEAR_ALBUMS
   };
 };
 
-export const getAlbums = keyword => {
+export const fetchAlbums = keyword => {
   return async dispatch => {
-    dispatch(beginGetAlbums());
+    dispatch(fetchAlbumsBegin());
     try {
-      const releaseData = await axios.get('http://musicbrainz.org/ws/2/release-group', {
-        params: { query: keyword, fmt: 'json' }
-      });
-      const releaseGroups = releaseData.data['release-groups'];
-      const data = await Promise.all(
-        releaseGroups.map(async album => {
-          const id = album.id;
-          const artist = album['artist-credit'].map(person => ({
-            id: person.artist.id,
-            name: person.artist.name
-          }));
-          const title = album.title;
-          const albumData = { id, artist, title, image: null };
-          try {
-            const coverData = await getCoverData(album.releases);
-            return Promise.resolve({
-              ...albumData,
-              ...{
-                image: {
-                  small: coverData[0]?.thumbnails?.small || null,
-                  large: coverData[0]?.thumbnails?.large || null
-                }
-              }
-            });
-          } catch (e) {
-            return Promise.resolve(albumData);
-          }
-        })
-      );
-      dispatch(getAlbumsSuccess(data));
+      const data = await getAlbums(keyword);
+      dispatch(fetchAlbumsSuccess(data));
     } catch (err) {
-      console.log(err);
-      dispatch(getAlbumsError('users'));
+      dispatch(fetchAlbumsFailure('Unable to show results'));
     }
   };
 };

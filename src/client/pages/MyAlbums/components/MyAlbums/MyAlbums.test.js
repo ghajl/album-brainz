@@ -5,22 +5,22 @@ import { createMemoryHistory } from 'history';
 import { Provider } from 'react-redux';
 import { createStore } from 'redux';
 import MyAlbums from './MyAlbums';
-jest.mock('../../../../data/helpers/getCoverData');
-jest.mock('../../../../data/helpers/getAlbumData');
-jest.mock('../../../shared/Image/Image');
+
+jest.mock('../AlbumItem/AlbumItemContainer');
+
 afterAll(cleanup);
 
 describe('album info component', () => {
   const albums = [
     {
       id: '1234',
-      artist: [{ id: '1', name: 'First Name' }, { id: '2', name: 'Second Name' }],
+      artists: [{ id: '1', name: 'First Name' }, { id: '2', name: 'Second Name' }],
       title: 'Album Title',
       image: 'image.jpg'
     },
     {
       id: '23d45',
-      artist: [{ id: '1', name: 'First Name' }, { id: '2', name: 'Second Name' }],
+      artists: [{ id: '1', name: 'First Name' }, { id: '2', name: 'Second Name' }],
       title: 'Album Title',
       image: 'image.jpg'
     }

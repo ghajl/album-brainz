@@ -12,7 +12,7 @@ class Image extends React.Component {
     this.setState({ loaded: true });
   };
   render() {
-    const { src, width, height, alt, placeholder, className, ...otherProps } = this.props;
+    const { src, width, height, alt, placeholder, className } = this.props;
     const placeholderClass = this.state.loaded ? '' : className;
     return (
       <div style={{ position: 'relative' }}>
@@ -25,10 +25,10 @@ class Image extends React.Component {
           afterLoad={this.afterLoad}
           wrapperClassName={placeholderClass}
           placeholderSrc={placeholder}
-          {...otherProps}
         />
         {!this.state.loaded && (
           <ReactLoading
+            data-testid="loading"
             style={{
               position: 'absolute',
               top: '50%',

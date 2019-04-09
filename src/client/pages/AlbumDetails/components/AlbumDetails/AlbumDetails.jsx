@@ -10,20 +10,15 @@ import Button from 'react-bootstrap/Button';
 import styles from './AlbumDetailsStyles';
 import Info from '../Info';
 
-const AlbumDetails = ({ classes, img, id, artist, title, date, isWaiting, addToMyList }) => (
+const AlbumDetails = ({ classes, image, id, artists, title, date, isWaiting, add }) => (
   <Container className="mt-5" data-testid="details">
     <Row>
       <Col sm={6}>
-        <Image data-testid="image" src={img} thumbnail />
+        <Image data-testid="image" src={image} thumbnail />
       </Col>
       <Col sm={6}>
-        <Info data-testid="info" id={id} artist={artist} title={title} date={date} />
-        <Button
-          onClick={() => addToMyList({ id, img, artist, title })}
-          className="mr-2"
-          size="sm"
-          variant="primary"
-        >
+        <Info data-testid="info" id={id} artists={artists} title={title} date={date} />
+        <Button onClick={add} className="mr-2" size="sm" variant="primary">
           Add
         </Button>
       </Col>
@@ -35,16 +30,17 @@ export default withStyles(styles)(AlbumDetails);
 
 AlbumDetails.propTypes = {
   classes: PropTypes.shape({}),
-  img: PropTypes.string.isRequired,
+  image: PropTypes.string.isRequired,
   id: PropTypes.string.isRequired,
-  artist: PropTypes.arrayOf(PropTypes.shape({})),
+  artists: PropTypes.arrayOf(PropTypes.shape({})),
   title: PropTypes.string,
-  date: PropTypes.string
+  date: PropTypes.string,
+  add: PropTypes.func.isRequired
 };
 
 AlbumDetails.defaultProps = {
   classes: {},
-  artist: [],
+  artists: [],
   title: '',
   date: ''
 };

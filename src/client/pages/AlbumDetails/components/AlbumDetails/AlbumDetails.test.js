@@ -8,7 +8,7 @@ describe('album details component', () => {
   const props = {
     id: '1234',
     img: 'image.jpg',
-    artist: [{ id: '1', name: 'First Name' }, { id: '2', name: 'Second Name' }],
+    artists: [{ id: '1', name: 'First Name' }, { id: '2', name: 'Second Name' }],
     title: 'Album Title',
     date: '2016-12-17'
   };

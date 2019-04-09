@@ -6,7 +6,6 @@ import ls from 'local-storage';
 import configureStore from './data/store';
 import { renderRoutes } from 'react-router-config';
 import routes from '../shared/routes';
-import { loadData } from './data/actionCreators/user';
 import '../styles/main.scss';
 
 let myAlbumsLocalList = ls('my-albums');
@@ -14,11 +13,10 @@ if (myAlbumsLocalList == null) {
   myAlbumsLocalList = [];
   ls('my-albums', myAlbumsLocalList);
 }
-// const myAlbumsLocal = {};
-// myAlbumsLocalList.forEach(item => (myAlbumsLocal[item] = null));
+
 const preloadedState = {
   user: {
-    albumsLocal: myAlbumsLocalList
+    albums: myAlbumsLocalList
   }
 };
 

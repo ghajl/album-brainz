@@ -2,12 +2,11 @@ import * as actionTypes from '../types';
 
 const album = (state = {}, action) => {
   switch (action.type) {
-    case actionTypes.GET_DETAILS_SUCCESS:
-      const { id, artist, title, image, date } = action;
-      return { id, artist, title, image, date };
-    case actionTypes.GET_DETAILS_BEGIN:
-    case actionTypes.CLEAR_ALBUMS:
-    case actionTypes.GET_DETAILS_ERROR:
+    case actionTypes.FETCH_ALBUM_INFO_SUCCESS:
+      const { id, artists, title, images, date } = action;
+      return { id, artists, title, images, date };
+    case actionTypes.FETCH_ALBUM_INFO_BEGIN:
+    case actionTypes.FETCH_ALBUM_INFO_FAILURE:
       return {};
     default:
       return state;

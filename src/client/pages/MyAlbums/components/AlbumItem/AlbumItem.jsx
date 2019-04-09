@@ -10,7 +10,7 @@ import styles from './AlbumItemStyles';
 import { LinkContainer } from 'react-router-bootstrap';
 import Image from '../../../shared/Image';
 
-const AlbumItem = ({ classes, id, title, artist, image, removeFromMyList }) => {
+const AlbumItem = ({ classes, id, title, artists, image, removeFromMyList }) => {
   return (
     <Media data-testid="album">
       <div className="mr-3">
@@ -27,7 +27,7 @@ const AlbumItem = ({ classes, id, title, artist, image, removeFromMyList }) => {
 
         <div data-testid="artists" className={classes.info}>
           <div>Artist:</div>
-          {artist.map(artist => (
+          {artists.map(artist => (
             <h5 key={artist.id} data-testid="name">
               {artist.name}
             </h5>
@@ -60,7 +60,7 @@ export default withStyles(styles)(AlbumItem);
 AlbumItem.propTypes = {
   classes: PropTypes.shape({}),
   id: PropTypes.string.isRequired,
-  artist: PropTypes.arrayOf(PropTypes.shape({})),
+  artists: PropTypes.arrayOf(PropTypes.shape({})),
   date: PropTypes.string,
   title: PropTypes.string,
   image: PropTypes.string
@@ -68,7 +68,7 @@ AlbumItem.propTypes = {
 
 AlbumItem.defaultProps = {
   classes: {},
-  artist: [],
+  artists: [],
   date: '',
   title: '',
   image: null

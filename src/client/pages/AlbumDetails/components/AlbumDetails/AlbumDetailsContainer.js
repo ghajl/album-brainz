@@ -1,19 +1,20 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import withStyles from 'react-jss';
 import ReactLoading from 'react-loading';
 import AlbumDetails from './AlbumDetails';
-import { getAlbumDetails } from '../../../../data/actionCreators/album';
+import { fetchAlbumInfo } from '../../../../data/actionCreators/album';
 import { closeDialog, addToMyList } from '../../../../data/actionCreators/user';
 import AlbumNotFound from '../AlbumNotFound';
 import styles from './AlbumDetailsStyles';
 
 class AlbumDetailsContainer extends React.Component {
   componentDidMount() {
-    const { match, getAlbumDetails } = this.props;
+    const { match, fetchAlbumInfo } = this.props;
     const { id } = match.params;
-    getAlbumDetails(id);
+    fetchAlbumInfo(id);
   }
 
   renderAlbumDetails = props => <AlbumDetails {...props} />;
@@ -35,15 +36,26 @@ class AlbumDetailsContainer extends React.Component {
   );
 
   render() {
-    const { classes, isWaiting, image, id, artist, title, date, addToMyList } = this.props;
+    const { classes, isWaiting, images, id, artists, title, date, addToMyList } = this.props;
     const renderComponent = id ? this.renderAlbumDetails : this.renderAlbumNotFound;
-    const img = image || 'https://upload.wikimedia.org/wikipedia/commons/b/b9/No_Cover.jpg';
+    const add = () =>
+      addToMyList({
+        id,
+        images,
+        artists,
+        title
+      });
+    const image =
+      images[0]?.thumbnails?.large ||
+      images[0]?.thumbnails?.small ||
+      images[0]?.image ||
+      'https://upload.wikimedia.org/wikipedia/commons/b/b9/No_Cover.jpg';
 
     return (
       <div className={classes.container}>
         {!!isWaiting
           ? this.renderLoading()
-          : renderComponent({ isWaiting, img, id, artist, title, date, addToMyList })}
+          : renderComponent({ isWaiting, image, id, artists, title, date, add })}
       </div>
     );
   }
@@ -54,12 +66,33 @@ export default withRouter(
     ({ user, album }) => ({
       message: user.message,
       isWaiting: user.isWaiting,
-      image: album.image,
+      images: album.images,
       id: album.id,
-      artist: album.artist,
+      artists: album.artists,
       title: album.title,
       date: album.date
     }),
-    { getAlbumDetails, closeDialog, addToMyList }
+    { fetchAlbumInfo, closeDialog, addToMyList }
   )(withStyles(styles)(AlbumDetailsContainer))
 );
+
+AlbumDetailsContainer.propTypes = {
+  classes: PropTypes.shape({}),
+  isWaiting: PropTypes.bool,
+  images: PropTypes.arrayOf(PropTypes.shape({})),
+  id: PropTypes.string,
+  artists: PropTypes.arrayOf(PropTypes.shape({})),
+  title: PropTypes.string,
+  date: PropTypes.string,
+  addToMyList: PropTypes.func.isRequired
+};
+
+AlbumDetailsContainer.defaultProps = {
+  classes: {},
+  isWaiting: false,
+  images: [],
+  id: '',
+  artists: [],
+  title: '',
+  date: ''
+};

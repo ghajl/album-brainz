@@ -2,39 +2,39 @@ import axios from 'axios';
 import * as actionTypes from '../types';
 import getAlbumData from '../helpers/getAlbumData';
 
-const beginGetDetails = () => {
-  return { type: actionTypes.GET_DETAILS_BEGIN };
+const fetchAlbumInfoBegin = () => {
+  return { type: actionTypes.FETCH_ALBUM_INFO_BEGIN };
 };
 
-const getDetailsSuccess = (id, artist, title, image, date) => {
-  console.log(id, artist, title, date);
+const fetchAlbumInfoSuccess = (id, artists, title, images, date) => {
   return {
-    type: actionTypes.GET_DETAILS_SUCCESS,
+    type: actionTypes.FETCH_ALBUM_INFO_SUCCESS,
     id,
-    artist,
+    artists,
     title,
-    image,
+    images,
     date
   };
 };
 
-const getDetailsError = message => {
+const fetchAlbumInfoFailure = message => {
   return {
-    type: actionTypes.GET_DETAILS_ERROR,
+    type: actionTypes.FETCH_ALBUM_INFO_FAILURE,
     message
   };
 };
 
-export const getAlbumDetails = albumID => {
+export const fetchAlbumInfo = albumId => {
   return async dispatch => {
-    dispatch(beginGetDetails());
+    dispatch(fetchAlbumInfoBegin());
     try {
-      console.log('getAlbumDetails');
-      const { id, artist, title, image, date } = await getAlbumData(albumID);
-      dispatch(getDetailsSuccess(id, artist, title, image, date));
+      const { id, artists, title, images, date } = await getAlbumData(albumId);
+      if (id) {
+        return dispatch(fetchAlbumInfoSuccess(id, artists, title, images, date));
+      }
+      dispatch(fetchAlbumInfoFailure('Album Not Found'));
     } catch (err) {
-      console.log(err);
-      dispatch(getDetailsError('Album Not Found'));
+      dispatch(fetchAlbumInfoFailure('Album Not Found'));
     }
   };
 };

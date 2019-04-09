@@ -1,0 +1,19 @@
+{
+  "images": [
+    {
+      "approved": true,
+      "back": false,
+      "comment": "",
+      "edit": 53938219,
+      "front": true,
+      "id": 20236078030,
+      "image": "/dist/cypress/fixtures/images/mbid-2dc16a5c-56c5-411c-af1f-9710dacc90d7-20236078030.jpg",
+      "thumbnails": {
+        "large": "/dist/cypress/fixtures/images/mbid-2dc16a5c-56c5-411c-af1f-9710dacc90d7-20236078030_thumb250.jpg",
+        "small": "/dist/cypress/fixtures/images/mbid-2dc16a5c-56c5-411c-af1f-9710dacc90d7-20236078030_thumb500.jpg"
+      },
+      "types": ["Front"]
+    }
+  ],
+  "release": "https://musicbrainz.org/release/2dc16a5c-56c5-411c-af1f-9710dacc90d7"
+}

@@ -1,12 +1,17 @@
 import axios from 'axios';
 
 export default async releases => {
+  let images = [];
   for (let i = 0; i < releases.length; i++) {
     try {
+      console.log(`http://coverartarchive.org/release/${releases[i].id}`);
       const data = await axios.get(`http://coverartarchive.org/release/${releases[i].id}`);
-      const coverData = data?.data?.images || [];
-      return coverData;
+      console.log(JSON.stringify(data.data));
+      if (data && data.data && data.data.images) {
+        images = [...data.data.images];
+        return images;
+      }
     } catch (e) {}
   }
-  return {};
+  return images;
 };

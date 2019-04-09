@@ -3,26 +3,26 @@ import { connect } from 'react-redux';
 import qs from 'query-string';
 import { Route, Switch, withRouter, Redirect } from 'react-router-dom';
 import Main from './Main';
-import { getAlbums, clearAlbums } from '../../../../data/actionCreators/albums';
+import { fetchAlbums, clearAlbums } from '../../../../data/actionCreators/albums';
 
 class MainContainer extends React.Component {
   componentDidMount() {
-    const { location, getAlbums, clearAlbums } = this.props;
+    const { location, fetchAlbums, clearAlbums } = this.props;
     const search = qs.parse(location.search);
 
     if (location.pathname === '/search' && typeof search.q !== 'undefined') {
-      getAlbums(search.q);
+      fetchAlbums(search.q);
     } else if (typeof search.q == 'undefined') {
       clearAlbums();
     }
   }
   componentDidUpdate(prevProps) {
-    const { location, getAlbums, clearAlbums } = this.props;
+    const { location, fetchAlbums, clearAlbums } = this.props;
     const { location: prevLocation } = prevProps;
     const search = qs.parse(location.search);
     const prevSearch = qs.parse(prevLocation.search);
     if (typeof search.q !== 'undefined' && search.q !== prevSearch.q) {
-      getAlbums(search.q);
+      fetchAlbums(search.q);
     } else if (typeof search.q == 'undefined') {
       clearAlbums();
     }
@@ -37,6 +37,6 @@ class MainContainer extends React.Component {
 export default withRouter(
   connect(
     ({ user: { isWaiting } }) => ({ isWaiting }),
-    { getAlbums, clearAlbums }
+    { fetchAlbums, clearAlbums }
   )(MainContainer)
 );

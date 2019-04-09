@@ -8,9 +8,9 @@ import styles from './MyAlbumsStyles';
 import { AlbumItemContainer as AlbumItem } from '../AlbumItem';
 
 const renderAlbums = albums =>
-  albums.map(({ id, title, artist, image }) => (
+  albums.map(({ id, title, artists, image }) => (
     <ListGroup.Item key={id} data-testid="item">
-      <AlbumItem id={id} title={title} artist={artist} image={image} />
+      <AlbumItem id={id} title={title} artists={artists} image={image} />
     </ListGroup.Item>
   ));
 
