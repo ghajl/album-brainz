@@ -57,7 +57,7 @@ describe('Main page', () => {
     cy.get('[data-testid="album"]').should('have.length', 3);
   });
 
-  it('Should perform a search instantly and display results if the url contains a search query', () => {
+  it('Should perform a search instantly and display results if the url contains a query string', () => {
     cy.visit('/search?q=Nevermind');
 
     cy.location('pathname').should('equal', '/search');

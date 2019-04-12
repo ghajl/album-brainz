@@ -10,7 +10,6 @@ export default async keyword => {
     });
     const { 'release-groups': releaseGroups } = data;
 
-    console.log(JSON.stringify(data));
     const albums = await Promise.map(releaseGroups, async releaseGroup => {
       const { id, title, releases, 'artist-credit': artistCredit } = releaseGroup;
       const images = await getCoverData(releases);
@@ -25,7 +24,6 @@ export default async keyword => {
 
     return albums;
   } catch (e) {
-    console.log(e);
     throw new Error(e);
   }
 };

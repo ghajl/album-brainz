@@ -107,7 +107,6 @@ export const addToMyList = ({ id, images, artists, title }) => {
 export const removeFromMyList = id => {
   return (dispatch, getState) => {
     const myAlbums = getState().user.albums;
-    console.log(myAlbums);
     if (!!~myAlbums.indexOf(id)) {
       const myList = ls('my-albums');
       const ind = myList.indexOf(id);

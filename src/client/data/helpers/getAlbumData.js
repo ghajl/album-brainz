@@ -9,7 +9,6 @@ export default async id => {
     } = await axios.get(`http://musicbrainz.org/ws/2/release-group/${id}`, {
       params: { inc: 'artist-credits+releases', fmt: 'json' }
     });
-    console.log(releases);
     const images = await getCoverData(releases);
 
     const album = createAlbum({
